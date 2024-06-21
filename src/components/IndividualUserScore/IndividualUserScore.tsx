@@ -10,10 +10,10 @@ interface IndividualUserScoreProps {
     setSelectedUser: (user: string | null) => void;
 }
 
-export default function IndividualUserScore({ usersAndScores, modalOpen, setModalOpen, selectedUser, setSelectedUser }: IndividualUserScoreProps) {
+const IndividualUserScore = ({ usersAndScores, modalOpen, setModalOpen, selectedUser, setSelectedUser }: IndividualUserScoreProps) => {
     const userScores = usersAndScores.filter(score => score.name === selectedUser).sort((a, b) => b.score - a.score);
 
-    function closeModal(){
+    const closeModal = () => {
         setSelectedUser(null);
         setModalOpen(false);
     }
@@ -32,3 +32,5 @@ export default function IndividualUserScore({ usersAndScores, modalOpen, setModa
 
     )
 }
+
+export default IndividualUserScore

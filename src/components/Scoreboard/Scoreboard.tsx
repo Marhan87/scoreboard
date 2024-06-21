@@ -7,7 +7,7 @@ interface ScoreboardProps {
   usersAndScores: UserAndScore[];
 }
 
-export default function Scoreboard({ usersAndScores }: ScoreboardProps) {
+const Scoreboard = ({ usersAndScores }: ScoreboardProps) => {
 
     const [selectedUser, setSelectedUser] = useState<string | null>(null);
     const [userScoreModalOpen, setUserScoreModalOpen] = useState(false);
@@ -49,3 +49,5 @@ export default function Scoreboard({ usersAndScores }: ScoreboardProps) {
         </Card>
     );
 }
+
+export default Scoreboard
