@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { UserAndScore } from '../../types';
-import IndividualUserScore from './IndividualUserScore';
+import IndividualUserScore from '../IndividualUserScore/IndividualUserScore';
+import { Box, Card, CardBody, Heading, ListItem, UnorderedList } from '@chakra-ui/react';
 
 interface ScoreboardProps {
   usersAndScores: UserAndScore[];
@@ -24,21 +25,25 @@ export default function Scoreboard({ usersAndScores }: ScoreboardProps) {
     };
 
     return (
-        <div>
-            <h1>High scores</h1>
-            <ul>
-                {sortedScores.map((userScore, index) => (
-                <li key={index} onClick={() => handleUserClick(userScore)}>
-                    {userScore.name}: {userScore.score}
-                </li>
-                ))}
-            </ul>
-            <IndividualUserScore 
-                usersAndScores={usersAndScores} 
-                modalOpen={modalOpen} 
-                setModalOpen={setModalOpen} 
-                selectedUser={selectedUser} 
-                setSelectedUser={setSelectedUser}/>
-        </div>
+        <Card>
+            <CardBody>
+                <Heading>High scores</Heading>
+
+                <UnorderedList>
+                    {sortedScores.map((userScore, index) => (
+                    <ListItem key={index} onClick={() => handleUserClick(userScore)}>
+                        {userScore.name}: {userScore.score}
+                    </ListItem>
+                    ))}
+                </UnorderedList>
+
+                <IndividualUserScore 
+                    usersAndScores={usersAndScores} 
+                    modalOpen={modalOpen} 
+                    setModalOpen={setModalOpen} 
+                    selectedUser={selectedUser} 
+                    setSelectedUser={setSelectedUser}/>
+            </CardBody>
+        </Card>
     );
 }

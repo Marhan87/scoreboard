@@ -1,6 +1,6 @@
-import { Modal } from '@chakra-ui/react';
 import React from 'react';
 import { UserAndScore } from '../../types';
+import { Modal, ModalBody, ModalHeader } from '@northlight/ui';
 
 interface IndividualUserScoreProps {
     usersAndScores: UserAndScore[];
@@ -11,17 +11,23 @@ interface IndividualUserScoreProps {
 }
 
 export default function IndividualUserScore({ usersAndScores, modalOpen, setModalOpen, selectedUser, setSelectedUser }: IndividualUserScoreProps) {
-    const userScores = usersAndScores.filter(score => score.name === selectedUser).sort((a, b) => b.score - a.score);;
+    const userScores = usersAndScores.filter(score => score.name === selectedUser).sort((a, b) => b.score - a.score);
+
+    function closeModal(){
+        setSelectedUser(null);
+        setModalOpen(false);
+    }
 
     return (
-        <Modal isOpen={modalOpen} onClose={() => {setSelectedUser(null)}}>
-            <h1>{selectedUser}'s Scores</h1>
+        <Modal isOpen={modalOpen} onClose={() => {closeModal()}}>
+            <ModalHeader>{selectedUser}'s Scores</ModalHeader>
+            <ModalBody>
             <ul>
                 {userScores.map((score, index) => (
                     <li key={index}>{score.score}</li>
                 ))}
             </ul>
-            <button onClick={() => setModalOpen(false)}>Close</button>
+            </ModalBody>
         </Modal>
 
     )

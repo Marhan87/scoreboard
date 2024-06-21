@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { UserAndScore } from '../../types';
+import { Form, TextField, NumberInput, Button, Input, InputGroup, VStack } from '@northlight/ui';
 
 interface AddUserScoreProps {
     currentUsersAndScore: UserAndScore[];
@@ -10,8 +11,7 @@ const AddUserScore = ({ currentUsersAndScore, setUsersAndScores }:AddUserScorePr
     const [newUser, setNewUser] = useState<string>('');
     const [newScore, setNewScore] = useState<string>('');
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleClick = () => {
         if (newUser.trim() === '' || isNaN(Number(newScore))) {
             alert('Please enter a valid username and score.');
             return;
@@ -28,10 +28,9 @@ const AddUserScore = ({ currentUsersAndScore, setUsersAndScores }:AddUserScorePr
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="newUser">Enter new user</label>
-                <input
+        <InputGroup>
+            <VStack>
+                <Input
                     id="newUser"
                     type="text"
                     name="user"
@@ -39,18 +38,16 @@ const AddUserScore = ({ currentUsersAndScore, setUsersAndScores }:AddUserScorePr
                     value={newUser}
                     onChange={(e) => setNewUser(e.target.value)}
                 />
-                <label htmlFor="newScore">Enter new score</label>
-                <input
+                <Input
                     id="newScore"
-                    type="number"
                     name="score"
                     placeholder="score"
                     value={newScore}
                     onChange={(e) => setNewScore(e.target.value)}
                 />
-                <button type="submit">Add Score</button>
-            </form>
-        </div>
+                <Button onClick={handleClick}>Add Score</Button>
+            </VStack>
+        </InputGroup>
     );
 };
 
