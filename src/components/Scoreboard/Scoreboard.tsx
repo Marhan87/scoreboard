@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react'
 import IndividualUserScore from '../IndividualUserScore/IndividualUserScore';
 import { Card, CardBody, Heading, ListItem, OrderedList, VStack } from '@chakra-ui/react';
 import { UserAndScore } from '../../app';
-import UserScoreItem from '../UserScoreItem/UserScoreItem';
 
 interface ScoreboardProps {
   usersAndScores: UserAndScore[];
@@ -33,10 +32,9 @@ export default function Scoreboard({ usersAndScores }: ScoreboardProps) {
 
                     <OrderedList>
                         {sortedScores.map((userScore) => (
-                            <UserScoreItem 
-                                key={userScore.name} 
-                                userScore={userScore} 
-                                onUserClick={() => handleUserClick(userScore)} />
+                            <ListItem onClick={() => handleUserClick(userScore)} cursor="pointer">
+                                {userScore.name}: {userScore.score}
+                            </ListItem>
                         ))}
                     </OrderedList>
 
