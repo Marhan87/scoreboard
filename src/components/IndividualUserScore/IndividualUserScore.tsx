@@ -1,6 +1,6 @@
 import React from 'react';
-import { UserAndScore } from '../../types';
-import { Modal, ModalBody, ModalHeader } from '@northlight/ui';
+import { ListItem, Modal, ModalBody, ModalHeader, OrderedList } from '@northlight/ui';
+import { UserAndScore } from '../../app';
 
 interface IndividualUserScoreProps {
     usersAndScores: UserAndScore[];
@@ -19,14 +19,14 @@ export default function IndividualUserScore({ usersAndScores, modalOpen, setModa
     }
 
     return (
-        <Modal isOpen={modalOpen} onClose={() => {closeModal()}}>
+        <Modal isOpen={modalOpen} onClose={closeModal}>
             <ModalHeader>{selectedUser}'s Scores</ModalHeader>
             <ModalBody>
-            <ul>
-                {userScores.map((score, index) => (
-                    <li key={index}>{score.score}</li>
-                ))}
-            </ul>
+                <OrderedList>
+                    {userScores.map((score, index) => (
+                        <ListItem key={index}>{score.score}</ListItem>
+                    ))}
+                </OrderedList>
             </ModalBody>
         </Modal>
 

@@ -1,51 +1,39 @@
-import React, { ReactNode, useEffect, useState } from 'react'
-import { Link } from '@chakra-ui/react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Container,
-  Box,
-  P,
   VStack,
   HStack,
-  H1,
-  H2,
 } from '@northlight/ui'
-import { palette } from '@northlight/tokens'
 import { ExcelDropzone, ExcelRow } from './components/ExcelDropzone/ExcelDropzone'
 import  Scoreboard from './components/Scoreboard/Scoreboard'
 import AddUserScore from './components/AddUserScore/AddUserScore'
 import users from './data/users'
 import scores from './data/scores'
 
-interface ExternalLinkProps {
-  href: string,
-  children: ReactNode,
-}
-interface UserAndScore {
+export interface UserAndScore {
   name: string, 
   score: number,
 }
 
-const ExternalLink = ({ href, children }: ExternalLinkProps) => <Link href={href} isExternal sx={ {color: palette.blue['500'], textDecoration: 'underline'} }>{ children }</Link>
-
 export default function App() {
-  const [usersAndScores, setUsersAndScores] = useState<UserAndScore[]>([]);
+  
 
   const userNames: Record<number, string> = users.reduce((map, user) => {
     map[user._id] = user.name;
     return map;
   }, {} as Record<number, string>);
 
-  const initialUsersAndScores: UserAndScore[] = scores.map(score => {
-    const name = userNames[score.userId] || 'Unknown';
-    return { name, score: score.score };
-  });
-
-  useEffect(() => {
-    setUsersAndScores(initialUsersAndScores);
-  }, []);
+  //Memo not super needed here since we know the files it's coming from. But if we assume that the initial users and score can change often, possibly updating from somewhere else.
+  const initialUsersAndScores = useMemo(() => {
+    return scores.map(score => {
+      const name = userNames[score.userId] || 'Unknown';
+      return { name, score: score.score };
+    });
+  }, [users, scores]);
+  const [usersAndScores, setUsersAndScores] = useState<UserAndScore[]>(initialUsersAndScores);
 
   function handleSheetData(data: ExcelRow[]) {
-    const importedScores = data.map(row => ({
+    const importedScores = data.filter(row => row.name && typeof row.score === 'number').map(row => ({
       name: row.name,
       score: row.score,
     }));
@@ -55,14 +43,14 @@ export default function App() {
   return (
     <Container maxW="6xl" padding="4">
       <HStack spacing={10} align="flex-start">
-        <ExcelDropzone onSheetDrop={handleSheetData} label="Import excel file here" />
         <VStack align="left">
-          <Scoreboard usersAndScores={usersAndScores} />
           <AddUserScore 
             currentUsersAndScore={usersAndScores} 
             setUsersAndScores={(updatedUsersAndScores: UserAndScore[]) => setUsersAndScores(updatedUsersAndScores)} 
           />
+        <ExcelDropzone onSheetDrop={handleSheetData} label="Import excel file here" />
         </VStack>
+        <Scoreboard usersAndScores={usersAndScores} />
       </HStack>
     </Container>
   );

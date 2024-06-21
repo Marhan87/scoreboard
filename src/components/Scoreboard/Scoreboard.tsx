@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from 'react'
-import { UserAndScore } from '../../types';
 import IndividualUserScore from '../IndividualUserScore/IndividualUserScore';
-import { Box, Card, CardBody, Heading, ListItem, UnorderedList } from '@chakra-ui/react';
+import { Card, CardBody, Heading, ListItem, OrderedList, VStack } from '@chakra-ui/react';
+import { UserAndScore } from '../../app';
+import UserScoreItem from '../UserScoreItem/UserScoreItem';
 
 interface ScoreboardProps {
   usersAndScores: UserAndScore[];
@@ -10,7 +11,7 @@ interface ScoreboardProps {
 export default function Scoreboard({ usersAndScores }: ScoreboardProps) {
 
     const [selectedUser, setSelectedUser] = useState<string | null>(null);
-    const [modalOpen, setModalOpen] = useState(false);
+    const [userScoreModalOpen, setUserScoreModalOpen] = useState(false);
 
     const sortedScores = useMemo(() => {
         const scores = [...usersAndScores].sort((a, b) => b.score - a.score);
@@ -21,28 +22,31 @@ export default function Scoreboard({ usersAndScores }: ScoreboardProps) {
 
     const handleUserClick = (user: UserAndScore) => {
         setSelectedUser(user.name);
-        setModalOpen(true);
+        setUserScoreModalOpen(true);
     };
 
     return (
         <Card>
             <CardBody>
-                <Heading>High scores</Heading>
+                <VStack spacing="2rem" align="flex-start">
+                    <Heading size='md'>High scores</Heading>
 
-                <UnorderedList>
-                    {sortedScores.map((userScore, index) => (
-                    <ListItem key={index} onClick={() => handleUserClick(userScore)}>
-                        {userScore.name}: {userScore.score}
-                    </ListItem>
-                    ))}
-                </UnorderedList>
+                    <OrderedList>
+                        {sortedScores.map((userScore) => (
+                            <UserScoreItem 
+                                key={userScore.name} 
+                                userScore={userScore} 
+                                onUserClick={() => handleUserClick(userScore)} />
+                        ))}
+                    </OrderedList>
 
-                <IndividualUserScore 
-                    usersAndScores={usersAndScores} 
-                    modalOpen={modalOpen} 
-                    setModalOpen={setModalOpen} 
-                    selectedUser={selectedUser} 
-                    setSelectedUser={setSelectedUser}/>
+                    <IndividualUserScore 
+                        usersAndScores={usersAndScores} 
+                        modalOpen={userScoreModalOpen} 
+                        setModalOpen={setUserScoreModalOpen} 
+                        selectedUser={selectedUser} 
+                        setSelectedUser={setSelectedUser}/>
+                </VStack>
             </CardBody>
         </Card>
     );
